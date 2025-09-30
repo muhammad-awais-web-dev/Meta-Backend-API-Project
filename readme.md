@@ -1,0 +1,17 @@
+Users{
+    admin{
+        username=admin
+        password=Lemon@123!
+        email=admin@littlelemon.com
+    }
+    manager{
+        username=manager
+        password=Lemon@123!
+        email=manager@littlelemon.com
+    }
+    deliverycrew{
+        username=deliverycrew
+        password=Lemon@123!
+        email=crew@littlelemon.com
+    }
+}
