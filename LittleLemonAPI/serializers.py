@@ -4,6 +4,7 @@ from .models import MenuItem ,CartItem, Order
 
 user = get_user_model()
 
+
 class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
