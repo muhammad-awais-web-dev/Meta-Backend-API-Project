@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import MenuItem ,CartItem, Order
+from django.contrib.auth.models import Group
+from .models import MenuItem, CartItem, Order, OrderItem, Category
 
-user = get_user_model()
+User = get_user_model()
 
 
 class MenuItemSerializer(serializers.ModelSerializer):
@@ -70,5 +71,45 @@ class OrderSerializer(serializers.ModelSerializer):
         instance.total_price = validated_data.get('total_price', instance.total_price)
         instance.save()
         return instance
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'slug', 'name']
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'order', 'menu_item', 'quantity', 'unit_price', 'price']
+        read_only_fields = ['unit_price', 'price']
+
+    def create(self, validated_data):
+        menu_item = validated_data['menu_item']
+        quantity = validated_data['quantity']
+        unit_price = menu_item.price
+        price = unit_price * quantity
+
+        order_item = OrderItem.objects.create(
+            order=validated_data['order'],
+            menu_item=menu_item,
+            quantity=quantity,
+            unit_price=unit_price,
+            price=price
+        )
+        return order_item
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['id', 'name']
 
 
